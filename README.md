@@ -11,7 +11,7 @@ A simple music search app using the iTunes API. Search any song and enjoy a 30-s
 - HTML, Tailwind CSS, JavaScript
 
 ## 📦 Usage
-    bash
+```bash
 git clone https://github.com/rishi1st/sun-lo-30sec.git
 cd sun-lo-30sec
 # Open index.html in browser
