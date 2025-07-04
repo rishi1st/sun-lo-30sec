@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>search-my-song</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body class="bg-gradient-to-br from-black via-gray-900 to-purple-900 text-white min-h-screen flex items-center justify-center px-4">
+
+  <div class="w-full max-w-md bg-gray-800 rounded-2xl shadow-lg p-6 space-y-6">
+    <h2 class="text-2xl font-bold text-center text-pink-400">🎵 Search Your Song</h2>
+
+    <div class="flex flex-col sm:flex-row gap-4">
+      <input 
+        type="text" 
+        id="searchTerm" 
+        placeholder="Enter song name" 
+        class="flex-1 px-4 py-2 rounded-lg bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500"
+      />
+      <button 
+        onclick="searchSong()" 
+        class="bg-pink-500 hover:bg-pink-600 text-white font-semibold px-4 py-2 rounded-lg transition duration-200"
+      >
+        Search
+      </button>
+    </div>
+
+    <div id="result" class="text-center space-y-4"></div>
+  </div>
+
+  <script>
+    async function searchSong() {
+      const term = document.getElementById('searchTerm').value;
+      const url = `https://itunes.apple.com/search?entity=song&limit=1&term=${encodeURIComponent(term)}`;
+
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+         console.log('song ka data :' , data)
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = '';
+
+        if (data.results.length > 0) {
+          const song = data.results[0];
+          resultDiv.innerHTML = `
+            <p class="text-xl font-medium">${song.trackName}</p>
+            <p class="text-gray-300">by <span class="text-pink-400 font-semibold">${song.artistName}</span></p>
+            <audio controls class="mx-auto w-full max-w-[250px] mt-2">
+              <source src="${song.previewUrl}" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+          `;
+        } else {
+          resultDiv.innerHTML = `<p class="text-red-400">No song found.</p>`;
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        document.getElementById('result').innerHTML = `<p class="text-red-500">Error fetching song.</p>`;
+      }
+    }
+  </script>
+
+</body>
+</html>
